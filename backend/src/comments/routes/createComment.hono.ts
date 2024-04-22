@@ -23,9 +23,9 @@
 
 import { Hono, type Context } from "hono";
 import { randomBytes } from "crypto";
-const app = new Hono();
+const comment = new Hono();
 
-app.get("/api/hello", (c) => {
+comment.get("/api/hello", (c) => {
   return c.json({
     ok: true,
     message: "Hello Hono!",
@@ -35,7 +35,7 @@ app.get("/api/hello", (c) => {
 const commentsByPostId: { [key: string]: { id: string; content: string }[] } =
   {};
 
-app.get("/posts/:id/comments", (c) => {
+comment.get("/posts/:id/comments", (c) => {
   return c.json(commentsByPostId[c.req.param("id")] || []);
 });
 
@@ -48,4 +48,4 @@ app.get("/posts/:id/comments", (c) => {
 //   return c.json(comments);
 // });
 
-export default app
+export default comment
