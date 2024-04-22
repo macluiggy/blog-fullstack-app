@@ -3,7 +3,7 @@ import { randomBytes } from "crypto";
 const app = express();
 
 app.use(express.json());
-const posts = {};
+const posts: { [key: string]: { id: string; title: string; content: string } } = {};
 
 app.get("/posts", (req, res) => {
   res.send(posts);
