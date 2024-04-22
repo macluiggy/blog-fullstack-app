@@ -1,22 +1,31 @@
-import { Router } from "express";
-import type { Request, Response } from "express";
+
+
+import { Hono, type Context } from "hono";
 import { randomBytes } from "crypto";
+const router = new Hono();
 
-const router = Router();
-
-const commentsByPostId: { [key: string]: { id: string; content: string }[] } = {};
-
-router.get("/posts/:id/comments", (req: Request, res: Response) => {
-  res.send(commentsByPostId[req.params.id] || []);
+router.get("/api/hello", (c) => {
+  return c.json({
+    ok: true,
+    message: "Hello Hono!",
+  });
 });
 
-router.post("/posts/:id/comments", (req: Request, res: Response) => {
+const commentsByPostId: { [key: string]: { id: string; content: string }[] } =
+  {};
+
+router.get("/posts/:id/comments", (c) => {
+  return c.json(commentsByPostId[c.req.param("id")] || []);
+});
+
+router.post("/posts/:id/comments", async (c) => {
   const id = randomBytes(4).toString("hex");
-  const { content } = req.body;
-  const comments = commentsByPostId[req.params.id] || [];
+  const body = await c.req.json();
+  const { content } = body;
+  const comments = commentsByPostId[c.req.param("id")] || [];
   comments.push({ id, content });
-  commentsByPostId[req.params.id] = comments;
-  res.status(201).send(comments);
+  commentsByPostId[c.req.param("id")] = comments;
+  return c.json(comments);
 });
 
 export default router;

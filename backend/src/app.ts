@@ -1,14 +1,10 @@
-import express from "express";
-// import routes
-import createPostRouter from "./posts/routes/createPost";
 import createCommentRouter from "./comments/routes/createComment";
-const app = express();
+import createPostRouter from "./posts/routes/createPost";
+import { Hono } from "hono";
+const app = new Hono();
 
-app.use(express.json());
-
-// posts
-app.use(createPostRouter);
-// comments
-app.use(createCommentRouter);
+app.route('/', createCommentRouter);
+app.route('/', createPostRouter);
 
 export default app;
+ 
