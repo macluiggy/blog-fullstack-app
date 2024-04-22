@@ -23,9 +23,9 @@
 
 import { Hono, type Context } from "hono";
 import { randomBytes } from "crypto";
-const comment = new Hono();
+const router = new Hono();
 
-comment.get("/api/hello", (c) => {
+router.get("/api/hello", (c) => {
   return c.json({
     ok: true,
     message: "Hello Hono!",
@@ -35,7 +35,7 @@ comment.get("/api/hello", (c) => {
 const commentsByPostId: { [key: string]: { id: string; content: string }[] } =
   {};
 
-comment.get("/posts/:id/comments", (c) => {
+router.get("/posts/:id/comments", (c) => {
   return c.json(commentsByPostId[c.req.param("id")] || []);
 });
 
@@ -47,7 +47,7 @@ comment.get("/posts/:id/comments", (c) => {
 //   commentsByPostId[c.req.param("id")] = comments;
 //   return c.json(comments);
 // });
-comment.post("/posts/:id/comments", async (c) => {
+router.post("/posts/:id/comments", async (c) => {
   const id = randomBytes(4).toString("hex");
   const body = await c.req.json();
   const { content } = body;
@@ -57,4 +57,4 @@ comment.post("/posts/:id/comments", async (c) => {
   return c.json(comments);
 });
 
-export default comment;
+export default router;
