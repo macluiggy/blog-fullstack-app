@@ -47,5 +47,14 @@ comment.get("/posts/:id/comments", (c) => {
 //   commentsByPostId[c.req.param("id")] = comments;
 //   return c.json(comments);
 // });
+comment.post("/posts/:id/comments", async (c) => {
+  const id = randomBytes(4).toString("hex");
+  const body = await c.req.json();
+  const { content } = body;
+  const comments = commentsByPostId[c.req.param("id")] || [];
+  comments.push({ id, content });
+  commentsByPostId[c.req.param("id")] = comments;
+  return c.json(comments);
+});
 
-export default comment
+export default comment;
